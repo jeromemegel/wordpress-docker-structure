@@ -22,7 +22,7 @@ services:
             - database:db
     php:
         container_name: ${COMPOSE_PROJECT_NAME}_php
-        image: megento/magento2.3-php-fpm:7.2
+        image: megento/php-fpm:7.2
         volumes:
             - ./application:/var/www/html
             - ./logs/php:/var/log
@@ -37,8 +37,9 @@ services:
           - 80
         environment:
             VIRTUAL_HOST: ${VIRTUAL_HOST}
+            LETSENCRYPT_HOST: ${VIRTUAL_HOST}
             LETSENCRYPT_EMAIL: 'jerome@megento.fr'
-            FPM_HOST: php:9072
+            FPM_HOST: php:9010
         volumes:
             - ./conf/apache/vhosts:/etc/apache2/sites-enabled/
             - ./conf/apache/envvars:/etc/apache2/envvars
@@ -47,31 +48,6 @@ services:
         links:
             - database:db
             - php
-
-    session:
-         image: redis:latest
-         expose:
-             - "6379"
-         volumes:
-             - /data/redis/cache:/data
-         command: redis-server --appendonly yes --maxmemory 256M --maxmemory-policy volatile-lru
-
-    cache:
-        image: redis:latest
-        expose:
-            - "6379"
-        volumes:
-            - /data/redis/cache:/data
-        command: redis-server --appendonly yes --maxmemory 256M --maxmemory-policy volatile-lru
-
-    fpc:
-        image: redis:latest
-        expose:
-            - "6379"
-        volumes:
-            - /data/redis/fpc:/data
-        command: redis-server --appendonly yes --maxmemory 256M --maxmemory-policy volatile-lru
-
 networks:
   default:
     external:

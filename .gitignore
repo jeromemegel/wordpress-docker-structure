@@ -4,5 +4,8 @@
 /.env
 /application/*
 
-#phpStorm
-/.idea 
+# phpStorm
+/.idea
+
+# Disabled
+docker-compose.override.yml
